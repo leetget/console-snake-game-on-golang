@@ -16,11 +16,9 @@ const (
 )
 
 var (
-	length    int = 1
-	head_x    int = width / 2
-	head_y    int = height / 2
-	snake_len int = 1
-
+	length       int = 1
+	head_x       int = width / 2
+	head_y       int = height / 2
 	apple_x      int
 	apple_y      int
 	array_x      [max_length]int
@@ -38,7 +36,7 @@ var (
 
 type Direction int
 
-const (
+const ( //enumerate
 	left Direction = iota
 	right
 	up
@@ -165,7 +163,7 @@ func main() {
 
 	go UserInput(done)
 
-	spawnApple() // Первоначальное спавн яблока
+	spawnApple() // Первоначальный спавн яблока
 
 	for flag {
 		MoveSnake()
