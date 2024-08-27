@@ -1,2 +1,2 @@
 # Console Snake Game
-![screnshot](https://imgur.com/a/LSrmd0O)
+![screnshot](https://s10.gifyu.com/images/So4SN.gif)
