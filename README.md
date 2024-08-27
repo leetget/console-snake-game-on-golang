@@ -1,2 +1,2 @@
-#console snake-game
-![scrrenshot](https://imgur.com/a/bwF2a0B)
+# Console Snake Game
+![screnshot](https://imgur.com/a/LSrmd0O.gif)
