@@ -31,6 +31,7 @@ var (
 	empty_obj    rune = ' '
 	flag         bool = true
 	dir          Direction
+	applecount   int           = 0
 	done         chan struct{} // канал для завершения горутины
 )
 
@@ -66,6 +67,13 @@ func InitializeGame() {
 		}
 		termbox.SetCell(array_x[i], array_y[i], snake_body, termbox.ColorDefault, termbox.ColorDefault)
 	}
+
+	score_x, score_y := 70, 30
+	ScoreText := fmt.Sprintf("score:%d", applecount)
+	for i, ch := range ScoreText {
+		termbox.SetCell(score_x+i, score_y, ch, termbox.ColorDefault, termbox.ColorDefault)
+	}
+
 	termbox.Flush()
 }
 
@@ -122,6 +130,7 @@ func MoveSnake() {
 	if head_x == apple_x && head_y == apple_y {
 		length++
 		spawnApple()
+		applecount++
 	}
 }
 
@@ -141,6 +150,7 @@ func spawnApple() {
 func isAppleOnSnake(x, y int) bool {
 	for i := 0; i < length; i++ {
 		if array_x[i] == x && array_y[i] == y {
+
 			return true
 		}
 	}
@@ -166,6 +176,7 @@ func main() {
 	spawnApple() // Первоначальный спавн яблока
 
 	for flag {
+
 		MoveSnake()
 		InitializeGame()
 		time.Sleep(time.Duration(sleep_time) * time.Millisecond)
@@ -173,7 +184,7 @@ func main() {
 		select {
 		case <-done:
 			flag = false // завершаем цикл игры при получении сигнала из канала
-			break
+
 		default:
 			continue
 		}
