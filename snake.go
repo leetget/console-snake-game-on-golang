@@ -29,7 +29,7 @@ var (
 	apple_object rune = 'o'
 	wall         rune = '#'
 	empty_obj    rune = ' '
-	flag         bool = true
+	gamestate    bool = true //
 	dir          Direction
 	applecount   int           = 0
 	done         chan struct{} // канал для завершения горутины
@@ -68,7 +68,7 @@ func InitializeGame() {
 		termbox.SetCell(array_x[i], array_y[i], snake_body, termbox.ColorDefault, termbox.ColorDefault)
 	}
 
-	score_x, score_y := 70, 30
+	score_x, score_y := 70, 10
 	ScoreText := fmt.Sprintf("score:%d", applecount)
 	for i, ch := range ScoreText {
 		termbox.SetCell(score_x+i, score_y, ch, termbox.ColorDefault, termbox.ColorDefault)
@@ -104,8 +104,13 @@ func UserInput(done chan struct{}) {
 
 func MoveSnake() {
 	for i := length; i > 0; i-- {
+		if head_x == array_x[i] && head_y == array_y[i] {
+			fmt.Print("Oh,you eat yourself...")
+			gamestate = false
+		}
 		array_x[i] = array_x[i-1]
 		array_y[i] = array_y[i-1]
+
 	}
 
 	switch dir {
@@ -121,7 +126,7 @@ func MoveSnake() {
 
 	if head_x <= 0 || head_x >= width-1 || head_y <= 0 || head_y >= height-1 {
 		fmt.Println("Game Over! You hit the wall.")
-		flag = false
+		gamestate = false
 	}
 
 	array_x[0] = head_x
@@ -132,6 +137,7 @@ func MoveSnake() {
 		spawnApple()
 		applecount++
 	}
+
 }
 
 func spawnApple() {
@@ -148,12 +154,12 @@ func spawnApple() {
 }
 
 func isAppleOnSnake(x, y int) bool {
-	for i := 0; i < length; i++ {
-		if array_x[i] == x && array_y[i] == y {
 
-			return true
-		}
+	if head_x == x && head_y == y {
+
+		return true
 	}
+
 	return false
 }
 
@@ -175,7 +181,7 @@ func main() {
 
 	spawnApple() // Первоначальный спавн яблока
 
-	for flag {
+	for gamestate { //game-loop
 
 		MoveSnake()
 		InitializeGame()
@@ -183,7 +189,7 @@ func main() {
 
 		select {
 		case <-done:
-			flag = false // завершаем цикл игры при получении сигнала из канала
+			gamestate = false // завершаем цикл игры при получении сигнала из канала
 
 		default:
 			continue
